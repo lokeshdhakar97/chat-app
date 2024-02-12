@@ -19,8 +19,11 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { setUser, user } = useAuthContext();
-
   const router = useRouter();
+
+  if (user) {
+    router.replace("/");
+  }
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
@@ -41,6 +44,7 @@ export default function Login() {
 
     const data = await res.json();
     setUser(data);
+    router.replace("/");
   };
 
   return (

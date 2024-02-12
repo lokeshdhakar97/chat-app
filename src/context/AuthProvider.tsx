@@ -6,10 +6,6 @@ import { AuthContextType } from "@/types";
 export const AuthProvider = ({ children }: any) => {
   const [user, setUser] = useState<any>(null);
 
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
-
   const contextValue: AuthContextType = {
     user,
     setUser,
