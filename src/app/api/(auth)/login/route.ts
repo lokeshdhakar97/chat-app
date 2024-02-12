@@ -3,6 +3,7 @@ import User from "@/modal/userSchema";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { sign } from "jsonwebtoken";
+import { cookies } from "next/headers";
 
 export async function POST(req: NextRequest) {
   try {
@@ -19,6 +20,12 @@ export async function POST(req: NextRequest) {
 
     const token = sign({ email: user.email }, process.env.JWT_SECRET!, {
       expiresIn: "1d",
+    });
+
+    cookies().set("token", token, {
+      httpOnly: true,
+      maxAge: 60 * 60 * 24,
+      path: "/",
     });
 
     return NextResponse.json({ message: "Login success", token, user });
