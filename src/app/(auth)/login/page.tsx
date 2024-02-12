@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { cookies } from "next/headers";
+import { useAuthContext } from "@/context/AuthContext";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -18,6 +18,7 @@ import { useState } from "react";
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const { setUser, user } = useAuthContext();
 
   const router = useRouter();
 
@@ -39,8 +40,7 @@ export default function Login() {
     });
 
     const data = await res.json();
-    console.log(data);
-    router.replace("/");
+    setUser(data);
   };
 
   return (
