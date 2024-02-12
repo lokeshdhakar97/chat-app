@@ -11,12 +11,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function Singup() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -30,8 +32,17 @@ export default function Singup() {
     setPassword(e.target.value);
   };
 
-  const handleSignup = () => {
-    console.log(email, username, password);
+  const handleSignup = async () => {
+    try {
+      const response = await fetch("/api/signup", {
+        method: "POST",
+        body: JSON.stringify({ email, username, password }),
+      });
+      const data = await response.json();
+      router.replace("/login");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
