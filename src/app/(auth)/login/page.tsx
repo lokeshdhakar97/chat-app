@@ -58,7 +58,7 @@ export default function Login() {
       <CardFooter className="flex items-start flex-col gap-4">
         <Button onClick={handleLogin}>Login</Button>
         <div className="flex gap-2">
-          <span>Don't have an account?</span>
+          <span>Create an account?</span>
           <Link href="/signup" className="text-blue-700">
             Signup
           </Link>
