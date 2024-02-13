@@ -12,8 +12,7 @@ import { ChatBubbleIcon } from "@radix-ui/react-icons";
 import { Textarea } from "./ui/textarea";
 import { DialogBox } from "./DialogBox";
 
-const ChatBoard = () => {
-
+const ChatDashboard = () => {
   return (
     <div className="w-screen h-screen bg-accent flex p-8 gap-4">
       <div className="h-full bg-accent w-3/12 rounded-3xl">
@@ -55,9 +54,12 @@ const ChatBoard = () => {
             className="grid gap-1 bg-accent p-6 "
             style={{ height: "480px", overflowY: "scroll" }}
           >
-            {[1, 2, 5, 6, 8, 5, 6, 3].map(() => {
+            {[1, 2, 5, 6, 8, 5, 6, 3].map((key) => {
               return (
-                <div className="-mx-2 my-1 flex items-start space-x-4 h-16 rounded-md p-2 transition-all  cursor-pointer px-4">
+                <div
+                  key={key}
+                  className="-mx-2 my-1 flex items-start space-x-4 h-16 rounded-md p-2 transition-all  cursor-pointer px-4"
+                >
                   <ChatBubbleIcon className="mt-px h-5 w-5" />
                   <div className="space-y-1">
                     <p className="text-sm font-medium leading-none">
@@ -84,4 +86,4 @@ const ChatBoard = () => {
   );
 };
 
-export default ChatBoard;
+export default ChatDashboard;
