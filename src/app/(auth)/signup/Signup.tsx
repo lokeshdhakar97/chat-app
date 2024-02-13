@@ -13,7 +13,6 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useState } from "react";
 import { setUserCookies } from "@/app/action";
-import { redirect } from "next/navigation";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
@@ -44,9 +43,12 @@ export default function Signup() {
           body: JSON.stringify({ email, username, password }),
         }
       );
+
       const data = await response.json();
-      if (data) {
+      if (response.ok) {
         setUserCookies(data.token);
+      } else {
+        alert(data.message);
       }
     } catch (error) {
       console.log(error);

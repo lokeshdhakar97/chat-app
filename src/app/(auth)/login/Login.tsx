@@ -39,8 +39,10 @@ export default function Login() {
       }
     );
     const data = await response.json();
-    if (data) {
+    if (response.ok) {
       setUserCookies(data.token);
+    } else {
+      alert(data.message);
     }
   };
 
