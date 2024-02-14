@@ -42,13 +42,14 @@ export default function Login() {
     );
     const data = await response.json();
     if (response.ok) {
+      setLoading(false);
       localStorage.setItem("userData", JSON.stringify(data));
       toast({
         description: "Login successful",
       });
-      setLoading(false);
       setUserCookies(data.token);
     } else {
+      setLoading(false);
       alert(data.message);
     }
   };

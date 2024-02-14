@@ -12,7 +12,7 @@ export async function setUserCookies(token) {
 }
 
 export async function removeUserCookies() {
-  cookies().remove("token");
+  cookies().delete("token");
 }
 
 export async function getUserCookies() {

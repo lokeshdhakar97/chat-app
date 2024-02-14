@@ -9,12 +9,15 @@ import {
 } from "./ui/card";
 import { DialogBox } from "./DialogBox";
 import { ChatBubbleIcon } from "@radix-ui/react-icons";
-import { getUserCookies } from "@/app/action";
+import { getUserCookies, removeUserCookies } from "@/app/action";
 import { useAuthContext } from "@/context/AuthContext";
+import { Button } from "./ui/button";
+import { redirect, useRouter } from "next/navigation";
 
 const AllChats = () => {
   const [chats, setChats] = useState<any>([]);
   const { user } = useAuthContext();
+  const router = useRouter();
 
   const fetchAllChats = async () => {
     try {
@@ -36,16 +39,26 @@ const AllChats = () => {
       console.log("Error fetching chats:", error);
     }
   };
+  console.log("user", user);
 
   useEffect(() => {
     fetchAllChats();
   }, []);
 
+  function logoutHandle() {
+    localStorage.removeItem("token");
+    removeUserCookies();
+    router.replace("/login");
+  }
   console.log("chats", chats);
 
   return (
     <div className="h-full bg-accent w-3/12 rounded-3xl">
       <Card className="h-full">
+        <div className="w-full pt-2 flex justify-between px-4 my-2 items-center">
+          <h2 className="font-semibold">Together</h2>
+          <Button onClick={logoutHandle}>Logout</Button>
+        </div>
         <CardHeader className="pb-3">
           <CardTitle>Chats</CardTitle>
           <CardDescription>Start Chatting, Start Connecting.</CardDescription>

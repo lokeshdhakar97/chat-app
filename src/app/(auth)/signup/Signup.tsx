@@ -56,6 +56,7 @@ export default function Signup() {
         setLoading(false);
         setUserCookies(data.token);
       } else {
+        setLoading(false);
         alert(data.message);
       }
     } catch (error) {
