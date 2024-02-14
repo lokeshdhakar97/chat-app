@@ -16,9 +16,13 @@ import Link from "next/link";
 export const DialogBox = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [fetchedUsers, setFetchedUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
+      console.log("searchQuery", searchQuery);
+
       const token = await getUserCookies();
       try {
         const uri = `${process.env.NEXT_PUBLIC_BACKEND_URL}/user?search=${searchQuery}`;
@@ -30,10 +34,17 @@ export const DialogBox = () => {
         const response = await fetch(uri, {
           headers: headers,
         });
-
         const data = await response.json();
-        setFetchedUsers(data);
+        if (response.ok) {
+          console.log(data);
+          setLoading(false);
+          setFetchedUsers(data);
+        } else {
+          setLoading(false);
+          alert(data?.message);
+        }
       } catch (error) {
+        setLoading(false);
         console.error("Error fetching users:", error);
       }
     };
@@ -44,7 +55,7 @@ export const DialogBox = () => {
       } else {
         setFetchedUsers([]);
       }
-    }, 500);
+    }, 2000);
 
     return () => clearTimeout(delaySearch);
   }, [searchQuery]);
@@ -69,10 +80,10 @@ export const DialogBox = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-
+        {loading && <p>Loading...</p>}
         <DialogFooter>
           <DialogClose asChild>
-            {fetchedUsers.length > 0 && (
+            {fetchedUsers.length > 0 ? (
               <div className="w-full flex flex-col gap-2">
                 {fetchedUsers.map((user: any) => {
                   return (
@@ -90,6 +101,8 @@ export const DialogBox = () => {
                   );
                 })}
               </div>
+            ) : (
+              <p className="w-full text-center">No users found</p>
             )}
           </DialogClose>
         </DialogFooter>
