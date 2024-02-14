@@ -13,7 +13,7 @@ import { getUserCookies } from "@/app/action";
 import { useAuthContext } from "@/context/AuthContext";
 
 const AllChats = () => {
-  const [allChats, setAllChats] = useState([]);
+  const [chats, setChats] = useState<any>([]);
   const { user } = useAuthContext();
 
   const fetchAllChats = async () => {
@@ -28,8 +28,10 @@ const AllChats = () => {
       const response = await fetch(uri, {
         headers: headers,
       });
-      const data = await response.json();
-      setAllChats(data);
+      if (response.ok) {
+        const data = await response.json();
+        setChats(data);
+      }
     } catch (error) {
       console.log("Error fetching chats:", error);
     }
@@ -38,6 +40,8 @@ const AllChats = () => {
   useEffect(() => {
     fetchAllChats();
   }, []);
+
+  console.log("chats", chats);
 
   return (
     <div className="h-full bg-accent w-3/12 rounded-3xl">
@@ -48,19 +52,16 @@ const AllChats = () => {
           <DialogBox />
         </CardHeader>
         <CardContent className="grid gap-1">
-          {allChats.map((data: any) => {
+          {chats.map((chat: any) => {
             return (
               <div
-                key={data._id}
+                key={chat._id}
                 className="-mx-2 my-4 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground cursor-pointer px-4"
               >
                 <ChatBubbleIcon className="mt-px h-5 w-5" />
                 <div className="space-y-1">
                   <p className="text-sm font-medium leading-none">
-                    {
-                      data.users.filter((user: any) => user._id !== user._id)
-                        .username
-                    }
+                    {chat.chatName}
                   </p>
                   <p className="text-sm text-muted-foreground">
                     Open to see messages

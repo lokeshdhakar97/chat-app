@@ -13,13 +13,13 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useState } from "react";
 import { setUserCookies } from "@/app/action";
-import { useAuthContext } from "@/context/AuthContext";
+import { toast } from "@/components/ui/use-toast";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { setUser } = useAuthContext();
+  const [loading, setLoading] = useState(false);
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -35,6 +35,7 @@ export default function Signup() {
 
   const handleSignup = async () => {
     try {
+      setLoading(true);
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL!}/user/register`,
         {
@@ -48,7 +49,11 @@ export default function Signup() {
 
       const data = await response.json();
       if (response.ok) {
-        setUser(data);
+        localStorage.setItem("userData", JSON.stringify(data));
+        toast({
+          description: "Signup successful",
+        });
+        setLoading(false);
         setUserCookies(data.token);
       } else {
         alert(data.message);
@@ -57,6 +62,10 @@ export default function Signup() {
       console.log(error);
     }
   };
+
+  if (loading) {
+    toast({ description: "Loading..." });
+  }
 
   return (
     <Card className="w-[550px] p-10">
