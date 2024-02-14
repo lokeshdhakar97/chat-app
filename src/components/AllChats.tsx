@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "./ui/card";
 import { DialogBox } from "./DialogBox";
-import { ChatBubbleIcon } from "@radix-ui/react-icons";
+import { ChatBubbleIcon, PersonIcon } from "@radix-ui/react-icons";
 import { getUserCookies, removeUserCookies } from "@/app/action";
 import { useAuthContext } from "@/context/AuthContext";
 import { Button } from "./ui/button";
@@ -18,6 +18,13 @@ const AllChats = () => {
   const [chats, setChats] = useState<any>([]);
   const { user } = useAuthContext();
   const router = useRouter();
+
+  const getSenderName = (loggedInUser: any, u: any) => {
+    if (loggedInUser._id === u[0]._id) {
+      return u[1].username;
+    }
+    return u[0].username;
+  };
 
   const fetchAllChats = async () => {
     try {
@@ -39,7 +46,6 @@ const AllChats = () => {
       console.log("Error fetching chats:", error);
     }
   };
-  console.log("user", user);
 
   useEffect(() => {
     fetchAllChats();
@@ -71,10 +77,17 @@ const AllChats = () => {
                 key={chat._id}
                 className="-mx-2 my-4 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground cursor-pointer px-4"
               >
-                <ChatBubbleIcon className="mt-px h-5 w-5" />
+                {chat.isGroupChat ? (
+                  <ChatBubbleIcon className="mt-px h-5 w-5" />
+                ) : (
+                  <PersonIcon className="mt-px h-5 w-5" />
+                )}
+
                 <div className="space-y-1">
                   <p className="text-sm font-medium leading-none">
-                    {chat.chatName}
+                    {chat.isGroupChat
+                      ? chat.chatName
+                      : getSenderName(user, chat.users)}
                   </p>
                   <p className="text-sm text-muted-foreground">
                     Open to see messages
