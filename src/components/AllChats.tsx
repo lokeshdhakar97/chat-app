@@ -13,9 +13,16 @@ import { getUserCookies, removeUserCookies } from "@/app/action";
 import { useAuthContext } from "@/context/AuthContext";
 import { Button } from "./ui/button";
 import { redirect, useRouter } from "next/navigation";
+import { ScrollArea } from "./ui/scroll-area";
+import Link from "next/link";
 
-const AllChats = () => {
+interface IAllChats {
+  chatId?: any;
+}
+
+const AllChats = ({ chatId }: IAllChats) => {
   const [chats, setChats] = useState<any>([]);
+  const [loading, setLoading] = useState(false);
   const { user } = useAuthContext();
   const router = useRouter();
 
@@ -28,6 +35,7 @@ const AllChats = () => {
 
   const fetchAllChats = async () => {
     try {
+      setLoading(true);
       const token = await getUserCookies();
       const uri = `${process.env.NEXT_PUBLIC_BACKEND_URL}/chat`;
       const headers = {
@@ -39,10 +47,12 @@ const AllChats = () => {
         headers: headers,
       });
       if (response.ok) {
+        setLoading(false);
         const data = await response.json();
         setChats(data);
       }
     } catch (error) {
+      setLoading(false);
       console.log("Error fetching chats:", error);
     }
   };
@@ -71,31 +81,39 @@ const AllChats = () => {
           <DialogBox />
         </CardHeader>
         <CardContent className="grid gap-1">
-          {chats.map((chat: any) => {
-            return (
-              <div
-                key={chat._id}
-                className="-mx-2 my-4 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground cursor-pointer px-4"
-              >
-                {chat.isGroupChat ? (
-                  <ChatBubbleIcon className="mt-px h-5 w-5" />
-                ) : (
-                  <PersonIcon className="mt-px h-5 w-5" />
-                )}
+          {loading && <p>Loading...</p>}
+          <ScrollArea className="h-[440px]">
+            {chats.map((chat: any) => {
+              return (
+                <Link href={`/chat/${chat._id}`}>
+                  <div
+                    key={chat._id}
+                    className={`-mx-2 my-4 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground cursor-pointer px-4 ${
+                      chatId === chat._id &&
+                      "bg-gray-300 border-2 border-gray-400"
+                    }`}
+                  >
+                    {chat.isGroupChat ? (
+                      <ChatBubbleIcon className="mt-px h-5 w-5" />
+                    ) : (
+                      <PersonIcon className="mt-px h-5 w-5" />
+                    )}
 
-                <div className="space-y-1">
-                  <p className="text-sm font-medium leading-none">
-                    {chat.isGroupChat
-                      ? chat.chatName
-                      : getSenderName(user, chat.users)}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    Open to see messages
-                  </p>
-                </div>
-              </div>
-            );
-          })}
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium leading-none">
+                        {chat.isGroupChat
+                          ? chat.chatName
+                          : getSenderName(user, chat.users)}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Open to see messages
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </ScrollArea>
         </CardContent>
       </Card>
     </div>

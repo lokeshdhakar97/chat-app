@@ -12,8 +12,14 @@ import {
 } from "./ui/card";
 import { ChatBubbleIcon } from "@radix-ui/react-icons";
 
-const ChatBox = () => {
+interface IChatBox {
+  chatId?: any;
+}
+const ChatBox = ({ chatId }: IChatBox) => {
   const [chat, setChat] = useState([]);
+
+  console.log(chatId);
+
   return (
     <div className="h-full w-9/12 bg-accent rounded-3xl relative bg-white border-2 flex justify-center items-center flex-col gap-2">
       {chat.length === 0 ? (
