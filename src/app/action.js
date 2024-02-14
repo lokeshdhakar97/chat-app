@@ -10,3 +10,12 @@ export async function setUserCookies(token) {
     path: "/",
   });
 }
+
+export async function removeUserCookies() {
+  cookies().remove("token");
+}
+
+export async function getUserCookies() {
+  return cookies().get("token").value;
+}
+``;

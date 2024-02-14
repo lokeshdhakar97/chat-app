@@ -13,11 +13,13 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useState } from "react";
 import { setUserCookies } from "@/app/action";
+import { useAuthContext } from "@/context/AuthContext";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const { setUser } = useAuthContext();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -46,6 +48,7 @@ export default function Signup() {
 
       const data = await response.json();
       if (response.ok) {
+        setUser(data);
         setUserCookies(data.token);
       } else {
         alert(data.message);

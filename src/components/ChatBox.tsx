@@ -1,5 +1,7 @@
 "use client";
+import React, { useState } from "react";
 import { Button } from "./ui/button";
+import { Textarea } from "./ui/textarea";
 import {
   Card,
   CardContent,
@@ -9,43 +11,22 @@ import {
   CardTitle,
 } from "./ui/card";
 import { ChatBubbleIcon } from "@radix-ui/react-icons";
-import { Textarea } from "./ui/textarea";
-import { DialogBox } from "./DialogBox";
 
-const ChatDashboard = () => {
+const ChatBox = () => {
+  const [chat, setChat] = useState([]);
   return (
-    <div className="w-screen h-screen bg-accent flex p-8 gap-4">
-      <div className="h-full bg-accent w-3/12 rounded-3xl">
-        <Card className="h-full">
-          <CardHeader className="pb-3">
-            <CardTitle>Chats</CardTitle>
-            <CardDescription>Start Chatting, Start Connecting.</CardDescription>
-            <DialogBox />
-          </CardHeader>
-          <CardContent className="grid gap-1">
-            {[1, 2, 3, 5, 6].map((key) => {
-              return (
-                <div
-                  key={key}
-                  className="-mx-2 my-4 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground cursor-pointer px-4"
-                >
-                  <ChatBubbleIcon className="mt-px h-5 w-5" />
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      Lokesh Dhakar
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      Open to see messages
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-          </CardContent>
-        </Card>
-      </div>
-      <div className="h-full w-9/12 bg-accent rounded-3xl relative">
-        <Card className="h-full">
+    <div className="h-full w-9/12 bg-accent rounded-3xl relative bg-white border-2 flex justify-center items-center flex-col gap-2">
+      {chat.length === 0 ? (
+        <>
+          <h1 className="text-5xl">📨</h1>
+          <span className="font-bold">No Chat Open</span>
+          <p className="w-[400px] text-center text-sm">
+            Begin your chatting experience by opening your chat. Share thoughts,
+            laughter, and memories with others in your personalized chat space.
+          </p>
+        </>
+      ) : (
+        <Card className="h-full w-full">
           <CardHeader className="pb-3 h-20">
             <CardTitle>AlphaBI Solutions</CardTitle>
             <CardDescription>Chat ID: alphabi123</CardDescription>
@@ -54,7 +35,7 @@ const ChatDashboard = () => {
             className="grid gap-1 bg-accent p-6 "
             style={{ height: "480px", overflowY: "scroll" }}
           >
-            {[1, 2, 5, 6, 8, 5, 6, 3].map((key) => {
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((key) => {
               return (
                 <div
                   key={key}
@@ -81,9 +62,9 @@ const ChatDashboard = () => {
             <Button className="py-6 px-7">Send</Button>
           </CardFooter>
         </Card>
-      </div>
+      )}
     </div>
   );
 };
 
-export default ChatDashboard;
+export default ChatBox;

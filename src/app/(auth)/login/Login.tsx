@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAuthContext } from "@/context/AuthContext";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { useState } from "react";
@@ -18,6 +19,7 @@ import { useState } from "react";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { setUser } = useAuthContext();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -40,6 +42,7 @@ export default function Login() {
     );
     const data = await response.json();
     if (response.ok) {
+      setUser(data);
       setUserCookies(data.token);
     } else {
       alert(data.message);
