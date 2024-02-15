@@ -66,7 +66,6 @@ const AllChats = ({ chatId }: IAllChats) => {
     removeUserCookies();
     router.replace("/login");
   }
-  console.log("chats", chats);
 
   return (
     <div className="h-full bg-accent w-3/12 rounded-3xl">

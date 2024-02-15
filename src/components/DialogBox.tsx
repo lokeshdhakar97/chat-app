@@ -17,11 +17,12 @@ export const DialogBox = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [fetchedUsers, setFetchedUsers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [userNotFound, setUserNotFound] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      console.log("searchQuery", searchQuery);
+      console.log("runiiing");
 
       const token = await getUserCookies();
       try {
@@ -36,8 +37,8 @@ export const DialogBox = () => {
         });
         const data = await response.json();
         if (response.ok) {
-          console.log(data);
           setLoading(false);
+          setUserNotFound(data.message);
           setFetchedUsers(data);
         } else {
           setLoading(false);
@@ -55,7 +56,7 @@ export const DialogBox = () => {
       } else {
         setFetchedUsers([]);
       }
-    }, 2000);
+    }, 500);
 
     return () => clearTimeout(delaySearch);
   }, [searchQuery]);
@@ -63,9 +64,14 @@ export const DialogBox = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant={"default"} className="mt-8">
-          Add Chat or Join Room
-        </Button>
+        <div className="flex w-full justify-between">
+          <Button variant={"default"} className=" w-1/2">
+            Add Chat
+          </Button>
+          <Button variant={"default"} className=" w-1/2">
+            Join Room
+          </Button>
+        </div>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -80,31 +86,34 @@ export const DialogBox = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        {loading && <p>Loading...</p>}
         <DialogFooter>
-          <DialogClose asChild>
-            {fetchedUsers.length > 0 ? (
-              <div className="w-full flex flex-col gap-2">
-                {fetchedUsers.map((user: any) => {
-                  return (
-                    <Link href={`/chat/${user._id}`}>
-                      <div className="w-full bg-slate-100 border-2 border-gray-200 h-14 rounded-lg px-4 flex items-center cursor-pointer hover:bg-gray-200">
-                        <div>
-                          <h1 className="text-2xl">🔍</h1>
+          {loading ? (
+            <div className="w-full">Loading...</div>
+          ) : (
+            <DialogClose asChild>
+              {fetchedUsers.length > 0 && (
+                <div className="w-full flex flex-col gap-2">
+                  {fetchedUsers.map((user: any) => {
+                    return (
+                      <Link href={`/chat/${user._id}`}>
+                        <div className="w-full bg-slate-100 border-2 border-gray-200 h-14 rounded-lg px-4 flex items-center cursor-pointer hover:bg-gray-200">
+                          <div>
+                            <h1 className="text-2xl">🔍</h1>
+                          </div>
+                          <div className="flex flex-col gap-0 px-1">
+                            <h6 className="text-sm">{user.username}</h6>
+                            <span className="text-xs">{user.email}</span>
+                          </div>
                         </div>
-                        <div className="flex flex-col gap-0 px-1">
-                          <h6 className="text-sm">{user.username}</h6>
-                          <span className="text-xs">{user.email}</span>
-                        </div>
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
-            ) : (
-              <p className="w-full text-center">No users found</p>
-            )}
-          </DialogClose>
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+            </DialogClose>
+          )}
+
+          {userNotFound && <div className="w-full">User not found</div>}
         </DialogFooter>
       </DialogContent>
     </Dialog>
