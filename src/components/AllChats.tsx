@@ -90,7 +90,7 @@ const AllChats = ({ chatId }: IAllChats) => {
                       onClick={() => setSelectedChat(chat)}
                       className={`my-4 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground cursor-pointer px-4 ${
                         chatId === chat?._id &&
-                        "bg-black text-white rounded-2xl"
+                        "bg-black text-white rounded-2xl hover:bg-gray-800 hover:text-white"
                       }`}
                     >
                       {chat.isGroupChat ? (

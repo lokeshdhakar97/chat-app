@@ -119,7 +119,6 @@ export const DialogBox = () => {
     }
   }
 
-  
   function addUserToGroupHandler(userId: String, username: String) {
     if (addUserIntoGroup.find((c: any) => c.userId === userId)) {
       alert("User Already Added");
@@ -131,10 +130,10 @@ export const DialogBox = () => {
   }
 
   return (
-    <div className="w-full bg-cyan-300">
+    <div className="w-full flex gap-2 ">
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant={"default"} className=" w-1/2">
+          <Button variant={"default"} className=" w-full">
             Add Chat
           </Button>
         </DialogTrigger>
@@ -188,7 +187,7 @@ export const DialogBox = () => {
 
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant={"default"} className=" w-1/2">
+          <Button variant={"default"} className=" w-full">
             Add Room
           </Button>
         </DialogTrigger>
