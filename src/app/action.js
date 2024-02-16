@@ -16,6 +16,6 @@ export async function removeUserCookies() {
 }
 
 export async function getUserCookies() {
-  return cookies().get("token").value;
+  return cookies().get("token")?.value;
 }
 ``;

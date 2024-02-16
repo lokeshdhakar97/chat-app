@@ -12,7 +12,7 @@ import { ChatBubbleIcon, PersonIcon } from "@radix-ui/react-icons";
 import { getUserCookies, removeUserCookies } from "@/app/action";
 import { useAuthContext } from "@/context/AuthContext";
 import { Button } from "./ui/button";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { ScrollArea } from "./ui/scroll-area";
 import Link from "next/link";
 
@@ -21,13 +21,12 @@ interface IAllChats {
 }
 
 const AllChats = ({ chatId }: IAllChats) => {
-  const [chats, setChats] = useState<any>([]);
   const [loading, setLoading] = useState(false);
-  const { user } = useAuthContext();
+  const { user, chat, setChat } = useAuthContext();
   const router = useRouter();
 
   const getSenderName = (loggedInUser: any, u: any) => {
-    if (loggedInUser._id === u[0]._id) {
+    if (loggedInUser?._id === u[0]._id) {
       return u[1].username;
     }
     return u[0].username;
@@ -49,7 +48,7 @@ const AllChats = ({ chatId }: IAllChats) => {
       if (response.ok) {
         setLoading(false);
         const data = await response.json();
-        setChats(data);
+        setChat(data);
       }
     } catch (error) {
       setLoading(false);
@@ -82,13 +81,13 @@ const AllChats = ({ chatId }: IAllChats) => {
         <CardContent className="grid gap-1">
           {loading && <p>Loading...</p>}
           <ScrollArea className="h-[440px]">
-            {chats.map((chat: any) => {
+            {chat.map((chat: any) => {
               return (
-                <Link href={`/chat/${chat._id}`}>
+                <Link href={`/chat/${chat?._id}`}>
                   <div
-                    key={chat._id}
+                    key={chat?._id}
                     className={`-mx-2 my-4 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground cursor-pointer px-4 ${
-                      chatId === chat._id &&
+                      chatId === chat?._id &&
                       "bg-gray-300 border-2 border-gray-400"
                     }`}
                   >

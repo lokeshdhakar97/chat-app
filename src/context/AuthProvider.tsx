@@ -5,6 +5,9 @@ import { AuthContextType } from "@/types";
 
 export const AuthProvider = ({ children }: any) => {
   const [user, setUser] = useState<any>(null);
+  const [selectedChat, setSelectedChat] = useState();
+  const [chat, setChat] = useState<any>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const userData = localStorage.getItem("userData");
@@ -16,6 +19,12 @@ export const AuthProvider = ({ children }: any) => {
   const contextValue: AuthContextType = {
     user,
     setUser,
+    setSelectedChat,
+    selectedChat,
+    chat,
+    setChat,
+    loading,
+    setLoading
   };
 
   return (
