@@ -25,7 +25,7 @@ const AllChats = ({ chatId }: IAllChats) => {
   const { user, chat, setChat, setSelectedChat } = useAuthContext();
   const router = useRouter();
 
-const getSenderName = (loggedInUser: any, u: any) => {
+  const getSenderName = (loggedInUser: any, u: any) => {
     if (loggedInUser?._id === u[0]._id) {
       return u[1].username;
     }
@@ -87,10 +87,10 @@ const getSenderName = (loggedInUser: any, u: any) => {
                   <Link href={`/chat/${chat?._id}`}>
                     <div
                       key={chat?._id}
-                      onClick={()=>setSelectedChat(chat)}
-                      className={`-mx-2 my-4 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground cursor-pointer px-4 ${
+                      onClick={() => setSelectedChat(chat)}
+                      className={`my-4 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground cursor-pointer px-4 ${
                         chatId === chat?._id &&
-                        "bg-gray-300 border-2 border-gray-400"
+                        "bg-black text-white rounded-2xl"
                       }`}
                     >
                       {chat.isGroupChat ? (

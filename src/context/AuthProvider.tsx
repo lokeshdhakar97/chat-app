@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }: any) => {
     chat,
     setChat,
     loading,
-    setLoading
+    setLoading,
   };
 
   return (

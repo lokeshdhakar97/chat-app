@@ -12,6 +12,7 @@ import {
 } from "./ui/card";
 import { ChatBubbleIcon } from "@radix-ui/react-icons";
 import { useAuthContext } from "@/context/AuthContext";
+import MessageBox from "./MessageBox";
 
 interface IChatBox {
   chatId?: any;
@@ -48,36 +49,7 @@ const ChatBox = ({ chatId }: IChatBox) => {
               {selectedChat.isGroupChat ? "ROOM" : "One2One"}
             </CardDescription>
           </CardHeader>
-          <CardContent
-            className="grid gap-1 bg-accent p-6 "
-            style={{ height: "480px", overflowY: "scroll" }}
-          >
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((key) => {
-              return (
-                <div
-                  key={key}
-                  className="-mx-2 my-1 flex items-start space-x-4 h-16 rounded-md p-2 transition-all  cursor-pointer px-4"
-                >
-                  <ChatBubbleIcon className="mt-px h-5 w-5" />
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      Lokesh Dhakar
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      Open to see messages
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-          </CardContent>
-          <CardFooter className="py-4 h-20 flex gap-4">
-            <Textarea
-              className="resize-none rounded-full px-9 py-2"
-              placeholder="Write your message here"
-            ></Textarea>
-            <Button className="py-6 px-7">Send</Button>
-          </CardFooter>
+          <MessageBox/>
         </Card>
       )}
     </div>
