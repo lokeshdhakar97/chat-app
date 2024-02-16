@@ -81,36 +81,42 @@ const AllChats = ({ chatId }: IAllChats) => {
         <CardContent className="grid gap-1">
           {loading && <p>Loading...</p>}
           <ScrollArea className="h-[440px]">
-            {chat.map((chat: any) => {
-              return (
-                <Link href={`/chat/${chat?._id}`}>
-                  <div
-                    key={chat?._id}
-                    className={`-mx-2 my-4 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground cursor-pointer px-4 ${
-                      chatId === chat?._id &&
-                      "bg-gray-300 border-2 border-gray-400"
-                    }`}
-                  >
-                    {chat.isGroupChat ? (
-                      <ChatBubbleIcon className="mt-px h-5 w-5" />
-                    ) : (
-                      <PersonIcon className="mt-px h-5 w-5" />
-                    )}
+            {chat.length > 0 ? (
+              chat.map((chat: any) => {
+                return (
+                  <Link href={`/chat/${chat?._id}`}>
+                    <div
+                      key={chat?._id}
+                      className={`-mx-2 my-4 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground cursor-pointer px-4 ${
+                        chatId === chat?._id &&
+                        "bg-gray-300 border-2 border-gray-400"
+                      }`}
+                    >
+                      {chat.isGroupChat ? (
+                        <ChatBubbleIcon className="mt-px h-5 w-5" />
+                      ) : (
+                        <PersonIcon className="mt-px h-5 w-5" />
+                      )}
 
-                    <div className="space-y-1">
-                      <p className="text-sm font-medium leading-none">
-                        {chat.isGroupChat
-                          ? chat.chatName
-                          : getSenderName(user, chat.users)}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        Open to see messages
-                      </p>
+                      <div className="space-y-1">
+                        <p className="text-sm font-medium leading-none">
+                          {chat.isGroupChat
+                            ? chat.chatName
+                            : getSenderName(user, chat.users)}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          Open to see messages
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              );
-            })}
+                  </Link>
+                );
+              })
+            ) : (
+              <p className="w-full text-center mt-4">
+                No Chats and Room Available
+              </p>
+            )}
           </ScrollArea>
         </CardContent>
       </Card>
