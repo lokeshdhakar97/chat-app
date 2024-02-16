@@ -11,16 +11,23 @@ import {
   CardTitle,
 } from "./ui/card";
 import { ChatBubbleIcon } from "@radix-ui/react-icons";
+import { useAuthContext } from "@/context/AuthContext";
 
 interface IChatBox {
   chatId?: any;
 }
 const ChatBox = ({ chatId }: IChatBox) => {
-  const [chat, setChat] = useState([]);
+  const { selectedChat, user } = useAuthContext();
 
+  const getSenderName = (loggedInUser: any, u: any) => {
+    if (loggedInUser?._id === u[0]._id) {
+      return u[1].username;
+    }
+    return u[0].username;
+  };
   return (
     <div className="h-full w-9/12 bg-accent rounded-3xl relative bg-white border-2 flex justify-center items-center flex-col gap-2">
-      {chat.length === 0 ? (
+      {!selectedChat ? (
         <>
           <h1 className="text-5xl">📨</h1>
           <span className="font-bold">No Chat Open</span>
@@ -32,8 +39,14 @@ const ChatBox = ({ chatId }: IChatBox) => {
       ) : (
         <Card className="h-full w-full">
           <CardHeader className="pb-3 h-20">
-            <CardTitle>AlphaBI Solutions</CardTitle>
-            <CardDescription>Chat ID: alphabi123</CardDescription>
+            <CardTitle>
+              {selectedChat.isGroupChat
+                ? selectedChat.chatName
+                : getSenderName(user, selectedChat.users)}
+            </CardTitle>
+            <CardDescription>
+              {selectedChat.isGroupChat ? "ROOM" : "One2One"}
+            </CardDescription>
           </CardHeader>
           <CardContent
             className="grid gap-1 bg-accent p-6 "

@@ -119,13 +119,13 @@ export const DialogBox = () => {
     }
   }
 
+  
   function addUserToGroupHandler(userId: String, username: String) {
     if (addUserIntoGroup.find((c: any) => c.userId === userId)) {
       alert("User Already Added");
       return;
     }
     setAddUserIntoGroup((prevUser: any) => [...prevUser, { userId, username }]);
-    console.log(addUserIntoGroup);
     setFetchedUsers([]);
     setSearchQuery("");
   }
