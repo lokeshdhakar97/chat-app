@@ -91,12 +91,12 @@ const MessageBox = () => {
           ) : (
             <ScrollArea className="h-[420px]">
               <div className="w-full flex flex-col gap-2 px-8">
-                {message.map((msg: any, key: any) => {
+                {message?.map((msg: any, key: any) => {
                   return (
                     <div
                       key={key}
                       className={`-mx-2   mt-1 flex items-start space-x-4 rounded-md p-2 transition-all  cursor-pointer px-4 ${
-                        msg.sender.username === user.username
+                        msg?.sender?.username === user?.username
                           ? "self-end"
                           : "self-start"
                       }`}
@@ -105,7 +105,7 @@ const MessageBox = () => {
                         <p
                           className={`text-sm font-medium leading-none p-2 rounded-xl 
                           ${
-                            msg.sender.username === user.username
+                            msg?.sender?.username === user?.username
                               ? "bg-gray-200"
                               : "bg-black text-white"
                           }
@@ -114,7 +114,7 @@ const MessageBox = () => {
                           {msg.content}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          {showTime(msg.createdAt)}
+                          {showTime(msg?.createdAt)}
                         </p>
                       </div>
                     </div>

@@ -155,7 +155,7 @@ export const DialogBox = () => {
               <div className="w-full">Loading...</div>
             ) : (
               <DialogClose asChild>
-                {fetchedUsers.length > 0 && (
+                {fetchedUsers?.length > 0 && (
                   <div className="w-full flex flex-col gap-2">
                     {fetchedUsers.map((user: any) => {
                       return (
@@ -168,8 +168,8 @@ export const DialogBox = () => {
                             <h1 className="text-2xl">🔍</h1>
                           </div>
                           <div className="flex flex-col gap-0 px-1">
-                            <h6 className="text-sm">{user.username}</h6>
-                            <span className="text-xs">{user.email}</span>
+                            <h6 className="text-sm">{user?.username}</h6>
+                            <span className="text-xs">{user?.email}</span>
                           </div>
                         </div>
                         // </Link>
@@ -219,7 +219,7 @@ export const DialogBox = () => {
                 return (
                   <>
                     <div className="w-fit bg-green-100 px-3 rounded-xl">
-                      {user.username}
+                      {user?.username}
                     </div>
                   </>
                 );
@@ -233,21 +233,21 @@ export const DialogBox = () => {
               <>
                 {fetchedUsers.length > 0 && (
                   <div className="w-full flex flex-col gap-2">
-                    {fetchedUsers.map((user: any) => {
+                    {fetchedUsers?.map((user: any) => {
                       return (
                         // <Link href={`/chat/${user._id}`}>
                         <div
                           className="w-full bg-slate-100 border-2 border-gray-200 h-14 rounded-lg px-4 flex items-center cursor-pointer hover:bg-gray-200"
                           onClick={() =>
-                            addUserToGroupHandler(user._id, user.username)
+                            addUserToGroupHandler(user?._id, user?.username)
                           }
                         >
                           <div>
                             <h1 className="text-2xl">🔍</h1>
                           </div>
                           <div className="flex flex-col gap-0 px-1">
-                            <h6 className="text-sm">{user.username}</h6>
-                            <span className="text-xs">{user.email}</span>
+                            <h6 className="text-sm">{user?.username}</h6>
+                            <span className="text-xs">{user?.email}</span>
                           </div>
                         </div>
                         // </Link>

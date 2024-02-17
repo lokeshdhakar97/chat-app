@@ -26,10 +26,10 @@ const AllChats = ({ chatId }: IAllChats) => {
   const router = useRouter();
 
   const getSenderName = (loggedInUser: any, u: any) => {
-    if (loggedInUser?._id === u[0]._id) {
-      return u[1].username;
+    if (loggedInUser?._id === u[0]?._id) {
+      return u[1]?.username;
     }
-    return u[0].username;
+    return u[0]?.username;
   };
 
   const fetchAllChats = async () => {

@@ -21,10 +21,10 @@ const ChatBox = ({ chatId }: IChatBox) => {
   const { selectedChat, user } = useAuthContext();
 
   const getSenderName = (loggedInUser: any, u: any) => {
-    if (loggedInUser?._id === u[0]._id) {
-      return u[1].username;
+    if (loggedInUser?._id === u[0]?._id) {
+      return u[1]?.username;
     }
-    return u[0].username;
+    return u[0]?.username;
   };
   return (
     <div className="h-full w-9/12 bg-accent rounded-3xl relative bg-white border-2 flex justify-center items-center flex-col gap-2">
