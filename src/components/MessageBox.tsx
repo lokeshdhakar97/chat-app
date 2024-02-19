@@ -7,29 +7,44 @@ import { useAuthContext } from "@/context/AuthContext";
 import showTime from "@/lib/helper";
 import io from "socket.io-client";
 
-const socket = io("http://localhost:5000");
-
+let socket: any;
+let compareSelectedChat: any;
 const MessageBox = () => {
   const [message, setMessage] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [newMessage, setNewMessage] = useState("");
   const { selectedChat, user } = useAuthContext();
+  const [socketConnected, setSocketConnected] = useState(false);
 
   useEffect(() => {
+    socket = io("http://localhost:5000");
+
+    socket.emit("setup", user);
+
     socket.on("connect", () => {
+      setSocketConnected(true);
       console.log("Connected to server");
     });
 
     socket.on("disconnect", () => {
+      setSocketConnected(false);
       console.log("Disconnected from server");
     });
   }, []);
 
   useEffect(() => {
-    socket.on("recieved_message", (data: any) => {
-      setMessage([...message, data]);
+    socket.on("received_message", (newMessageRec: any) => {
+      if (
+        !compareSelectedChat ||
+        compareSelectedChat?._id !== newMessageRec?.chat?._id
+      ) {
+        console.log("nofication", newMessageRec);
+      } else {
+        setMessage([...message, newMessageRec]);
+      }
     });
   });
+
   const fetchMessage = async () => {
     if (!selectedChat) return;
     try {
@@ -47,6 +62,7 @@ const MessageBox = () => {
       const data = await response.json();
       setMessage(data);
       setLoading(false);
+      socket.emit("join_chat", selectedChat?._id);
     } catch (error: any) {
       setLoading(false);
       alert(error.message);
@@ -55,6 +71,7 @@ const MessageBox = () => {
 
   useEffect(() => {
     fetchMessage();
+    compareSelectedChat = selectedChat;
   }, [selectedChat]);
 
   const typingHandler = (e: any) => {
@@ -88,7 +105,7 @@ const MessageBox = () => {
       const data = await response.json();
       if (response.ok) {
         socket.emit("send_message", data);
-        // setMessage([...message, data]);
+        setMessage([...message, data]);
       } else {
         alert(data?.error);
       }
@@ -98,7 +115,6 @@ const MessageBox = () => {
   return (
     <>
       <CardContent>
-      
         <div className=" gap-1  border-t-2 border-gray-800 pt-3">
           {loading ? (
             <div className="w-full  h-[420px] flex justify-center items-center">
