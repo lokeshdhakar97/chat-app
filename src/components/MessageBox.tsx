@@ -6,7 +6,6 @@ import { getUserCookies } from "@/app/action";
 import { useAuthContext } from "@/context/AuthContext";
 import showTime from "@/lib/helper";
 import io from "socket.io-client";
-import { Button } from "./ui/button";
 
 const socket = io("http://localhost:5000");
 
@@ -27,9 +26,8 @@ const MessageBox = () => {
   }, []);
 
   useEffect(() => {
-    socket.on("res", (data) => {
-      console.log("Check data");
-      console.log(data);
+    socket.on("recieved_message", (data: any) => {
+      setMessage([...message, data]);
     });
   });
   const fetchMessage = async () => {
@@ -73,6 +71,9 @@ const MessageBox = () => {
         "Authorization": `Bearer ${token}`,
       };
 
+      if (newMessage.trim().length === 0) {
+        return alert("Write message first");
+      }
       const requestBody = {
         content: newMessage,
         chatId: selectedChat._id,
@@ -86,22 +87,18 @@ const MessageBox = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        setMessage([...message, data]);
+        socket.emit("send_message", data);
+        // setMessage([...message, data]);
       } else {
         alert(data?.error);
       }
     }
   };
 
-  function sayHello() {
-    let data = "Hey Lokesh, How are you? ";
-    socket.emit("say_hello", data);
-  }
-
   return (
     <>
       <CardContent>
-        <Button onClick={sayHello}>Say Hello</Button>
+      
         <div className=" gap-1  border-t-2 border-gray-800 pt-3">
           {loading ? (
             <div className="w-full  h-[420px] flex justify-center items-center">
