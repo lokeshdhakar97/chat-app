@@ -1,12 +1,14 @@
-import { ChatBubbleIcon } from "@radix-ui/react-icons";
 import React, { useEffect, useState } from "react";
 import { ScrollArea } from "./ui/scroll-area";
 import { CardContent, CardFooter } from "./ui/card";
 import { Textarea } from "./ui/textarea";
-import { Button } from "./ui/button";
 import { getUserCookies } from "@/app/action";
 import { useAuthContext } from "@/context/AuthContext";
 import showTime from "@/lib/helper";
+import io from "socket.io-client";
+import { Button } from "./ui/button";
+
+const socket = io("http://localhost:5000");
 
 const MessageBox = () => {
   const [message, setMessage] = useState<any>([]);
@@ -14,6 +16,22 @@ const MessageBox = () => {
   const [newMessage, setNewMessage] = useState("");
   const { selectedChat, user } = useAuthContext();
 
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log("Connected to server");
+    });
+
+    socket.on("disconnect", () => {
+      console.log("Disconnected from server");
+    });
+  }, []);
+
+  useEffect(() => {
+    socket.on("res", (data) => {
+      console.log("Check data");
+      console.log(data);
+    });
+  });
   const fetchMessage = async () => {
     if (!selectedChat) return;
     try {
@@ -75,9 +93,15 @@ const MessageBox = () => {
     }
   };
 
+  function sayHello() {
+    let data = "Hey Lokesh, How are you? ";
+    socket.emit("say_hello", data);
+  }
+
   return (
     <>
       <CardContent>
+        <Button onClick={sayHello}>Say Hello</Button>
         <div className=" gap-1  border-t-2 border-gray-800 pt-3">
           {loading ? (
             <div className="w-full  h-[420px] flex justify-center items-center">
