@@ -29,7 +29,6 @@ const MessageBox = () => {
       });
 
       const data = await response.json();
-      console.log(data);
       setMessage(data);
       setLoading(false);
     } catch (error: any) {
@@ -69,15 +68,12 @@ const MessageBox = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        console.log(data);
         setMessage([...message, data]);
       } else {
         alert(data?.error);
       }
     }
   };
-
-  console.log(user.username, "username");
 
   return (
     <>

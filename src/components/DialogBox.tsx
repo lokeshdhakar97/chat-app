@@ -26,7 +26,6 @@ export const DialogBox = () => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      console.log("runiiing");
 
       const token = await getUserCookies();
       try {
