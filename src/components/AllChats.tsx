@@ -24,6 +24,7 @@ const AllChats = ({ chatId }: IAllChats) => {
   const [loading, setLoading] = useState(false);
   const { user, chat, setChat, setSelectedChat } = useAuthContext();
   const router = useRouter();
+  console.log(chat, "chat");
 
   const getSenderName = (loggedInUser: any, u: any) => {
     if (loggedInUser?._id === u[0]?._id) {
@@ -105,8 +106,10 @@ const AllChats = ({ chatId }: IAllChats) => {
                             ? chat.chatName
                             : getSenderName(user, chat.users)}
                         </p>
-                        <p className="text-sm text-muted-foreground">
-                          Open to see messages
+                        <p className="text-sm text-muted-foreground text-green-600">
+                          {chat.latestMessage?.content
+                            ? chat.latestMessage?.content
+                            : "No message yet"}
                         </p>
                       </div>
                     </div>

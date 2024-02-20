@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useRef, useState } from "react";
 import { ScrollArea } from "./ui/scroll-area";
 import { CardContent, CardFooter } from "./ui/card";
 import { Textarea } from "./ui/textarea";
@@ -13,8 +13,12 @@ const MessageBox = () => {
   const [message, setMessage] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [newMessage, setNewMessage] = useState("");
-  const { selectedChat, user } = useAuthContext();
+  const { selectedChat, user, chat } = useAuthContext();
   const [socketConnected, setSocketConnected] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const messageBoxRef = useRef<any>(null);
+
+  let typingTimeout: any;
 
   useEffect(() => {
     socket = io("http://localhost:5000");
@@ -29,6 +33,14 @@ const MessageBox = () => {
     socket.on("disconnect", () => {
       setSocketConnected(false);
       console.log("Disconnected from server");
+    });
+
+    socket.on("typing", (data: any) => {
+      setIsTyping(true);
+      clearTimeout(typingTimeout);
+      typingTimeout = setTimeout(() => {
+        setIsTyping(false);
+      }, 1000);
     });
   }, []);
 
@@ -76,6 +88,7 @@ const MessageBox = () => {
 
   const typingHandler = (e: any) => {
     setNewMessage(e.target.value);
+    socket.emit("typing", selectedChat?._id);
   };
 
   const sendMessage = async (e: any) => {
@@ -112,6 +125,15 @@ const MessageBox = () => {
     }
   };
 
+  function scrollToBottom() {
+    if (messageBoxRef?.current === null) return;
+    messageBoxRef?.current.scrollIntoView({ behavior: "smooth" });
+  }
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [message]);
+
   return (
     <>
       <CardContent>
@@ -122,42 +144,51 @@ const MessageBox = () => {
               <h2>Loading</h2>
             </div>
           ) : (
-            <ScrollArea className="h-[420px]">
-              <div className="w-full flex flex-col gap-2 px-8">
-                {message?.map((msg: any, key: any) => {
-                  return (
-                    <div
-                      key={key}
-                      className={`-mx-2   mt-1 flex items-start space-x-4 rounded-md p-2 transition-all  cursor-pointer px-4 ${
-                        msg?.sender?.username === user?.username
-                          ? "self-end"
-                          : "self-start"
-                      }`}
-                    >
-                      <div className="space-y-1">
-                        <p
-                          className={`text-sm font-medium leading-none p-2 rounded-xl 
+            <>
+              <ScrollArea className="h-[420px] relative">
+                <div className="w-full flex flex-col gap-2 px-8">
+                  {message?.map((msg: any, key: any) => {
+                    return (
+                      <div
+                        key={key}
+                        className={`-mx-2   mt-1 flex items-start space-x-4 rounded-md p-2 transition-all  cursor-pointer px-4 ${
+                          msg?.sender?.username === user?.username
+                            ? "self-end"
+                            : "self-start"
+                        }`}
+                      >
+                        <div className="space-y-1">
+                          <p
+                            className={`text-sm font-medium leading-none p-2 rounded-xl 
                           ${
                             msg?.sender?.username === user?.username
                               ? "bg-gray-200"
                               : "bg-black text-white"
                           }
                           `}
-                        >
-                          {msg.content}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {showTime(msg?.createdAt)}
-                        </p>
+                          >
+                            {msg.content}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {showTime(msg?.createdAt)}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </ScrollArea>
+                    );
+                  })}
+                </div>
+                <div ref={messageBoxRef}></div>
+              </ScrollArea>
+            </>
           )}
         </div>
       </CardContent>
+      {isTyping && (
+        <div className="flex justify-center items-center ">
+          <div className="w-2 h-2 rounded-full bg-green-400 mx-1 animate-bounce"></div>
+          <p className="text-xs text-muted-foreground">Typing...</p>
+        </div>
+      )}
       <CardFooter className="py-4 h-20 flex gap-4">
         <Textarea
           onKeyDown={sendMessage}
